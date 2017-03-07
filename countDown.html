@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+        .countDown span {
+            width: 58px;
+            height: 48px;
+            line-height: 46px;
+            display: inline-block;
+            border: 1px solid #505050;
+            color: #fff;
+            background-color: #000;
+            text-align: center;
+            border-radius: 5px;
+            background-image: -webkit-linear-gradient(180deg, rgba(0, 0, 0, 1) 50%, rgba(42,42,42, .8) 51%, rgba(42,42,42, .8) 100%);
+            background-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 50%, rgba(42,42,42, .8) 51%, rgba(42,42,42, .8) 100%);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="countDown" class="countDown">
+        <span id="dayID">--</span> : <span id="hourID">--</span> : <span id="minuteID">--</span> : <span id="secondID">--</span>
+    </div>
+
+    <script type="text/javascript" src="./jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="countDown.js"></script>
+    <script type="text/javascript">
+
+        $(document).countDown({
+            endTime: '2017/4/8 17:35:30',
+            dayID: '#dayID',
+            hourID: '#hourID',
+            minuteID: '#minuteID',
+            secondID: '#secondID',
+
+            dateDivision: "/",
+            timeDivision: ":",
+            Division: " "
+        })
+
+    </script>
+
+
+</body>
+</html>
