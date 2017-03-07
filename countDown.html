@@ -14,7 +14,10 @@
             box-sizing: border-box;
             vertical-align: middle;
         }
-        .countDown span {
+        body {
+            padding: 100px;
+        }
+        .countDown span, .demo {
             width: 58px;
             height: 48px;
             line-height: 46px;
@@ -27,6 +30,19 @@
             background-image: -webkit-linear-gradient(180deg, rgba(0, 0, 0, 1) 50%, rgba(42,42,42, .8) 51%, rgba(42,42,42, .8) 100%);
             background-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 50%, rgba(42,42,42, .8) 51%, rgba(42,42,42, .8) 100%);
         }
+        .demo {
+            margin-top: 20px;
+        }
+        .mon {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, .1);
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -35,21 +51,51 @@
         <span id="dayID">--</span> : <span id="hourID">--</span> : <span id="minuteID">--</span> : <span id="secondID">--</span>
     </div>
 
+    <div id="demo" class="demo">10s</div>
+
+    <div class="mon"></div>
+
     <script type="text/javascript" src="./jquery-3.1.1.js"></script>
     <script type="text/javascript" src="countDown.js"></script>
     <script type="text/javascript">
 
-        $(document).countDown({
-            endTime: '2017/4/8 17:35:30',
-            dayID: '#dayID',
-            hourID: '#hourID',
-            minuteID: '#minuteID',
-            secondID: '#secondID',
 
-            dateDivision: "/",
-            timeDivision: ":",
-            Division: " "
-        })
+        // 倒数到某一时刻
+        let option = {
+                type: 2,
+                endTime: '2020/3/7 11:52:50',
+                dayID: '#dayID',
+                hourID: '#hourID',
+                minuteID: '#minuteID',
+                secondID: '#secondID',
+
+                dateDivision: "/",
+                timeDivision: ":",
+                Division: " ",
+                endTimeCallBack: endTimeCallBack
+            };
+        $('#countDown').countDown(option);
+        function endTimeCallBack(){
+            console.log('倒计时结束111111111');
+        }
+
+
+
+        // 倒数多少秒
+        let option2 = {
+                type:1,
+                address: '#demo',
+                endTime: 10,
+                endTimeCallBack: endTimeCallBack2
+            };
+
+        $('#demo').countDown(option2);
+        function endTimeCallBack2(){
+            $('.mon').show();
+        }
+
+
+
 
     </script>
 
