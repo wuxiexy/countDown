@@ -109,7 +109,7 @@
             "use strict";
             if(t<0){
                 w.endTimeCallBack();
-                clearInterval(dynamic);
+                clearInterval(timer);
                 return;
             }
             let lists = {
