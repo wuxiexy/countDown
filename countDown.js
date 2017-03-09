@@ -51,7 +51,6 @@
                 timeEndTip: '倒数结束!',
 
                 endTimeCallBack: function(){
-                    "use strict";
                     alert(w.timeEndTip);
                 }
             },
@@ -63,6 +62,11 @@
             };
 
         $.extend(w, options);
+
+        let timeStamp = 0,
+            startTimeStamp = new Date().getTime(),                      // 开始的时间戳
+            endTimeStamp = 0;                                           // 结束的时间戳
+
 
         switch (w.type){
             case 1:
@@ -76,63 +80,70 @@
 
         // 倒计时多少秒
         function reciprocalSecond(t){
-            "use strict";
-            let $a = $(w.address),
-                n = t,
-                recSec = setInterval(function(){
-                    $a.html(--n +w.typeSecondTip);
-                    if(n==-1){
-                        $a.html(w.endTime +w.typeSecondTip);
-                        w.endTimeCallBack();
-                        clearInterval(recSec);
-                    }
-                }, 1000);
+            endTimeStamp = localStorage.getItem('endTimeStamp', endTimeStamp);
+            if(endTimeStamp>startTimeStamp){
+                timeStamp = endTimeStamp - startTimeStamp
+            }else{
+                endTimeStamp = startTimeStamp+t*1000;
+                 localStorage.setItem('endTimeStamp', endTimeStamp);
+                timeStamp = t*1000;
+            }
+            let recSec = setInterval(function(){ HandleTime(timeStamp, secondsIn, recSec); }, 1000);
+            HandleTime(timeStamp, secondsIn, recSec);
         }
+
 
         // 倒计时某一天具体时刻
         function countdownOneDay(){
-            "use strict";
-            let timeStamp = new Date(w.endTime).getTime()-(new Date().getTime());
-
-            // 倒数
+            timeStamp = new Date(w.endTime).getTime()-startTimeStamp;
             let dynamic = setInterval(function(){
-                "use strict";
-                HandleTime(timeStamp);
+                HandleTime(timeStamp, writeIn, dynamic);                                // 倒数
             }, 1000);
+            HandleTime(timeStamp, writeIn, dynamic);
+        }
 
 
-            HandleTime(timeStamp);
-            // 处理倒数
-            function HandleTime(t){
-                "use strict";
-                if(t<0){
-                    w.endTimeCallBack();
-                    clearInterval(dynamic);
-                    return;
-                }
-                let lists = {
-                    day: Math.floor(t/tc.d),
-                    hour: Math.floor((t%tc.d)/tc.h),
-                    minute: Math.floor(((t%tc.d)%tc.h)/tc.m),
-                    seconds: Math.floor((((t%tc.d)%tc.h)%tc.m)/tc.s)
-                };
 
-                writeIn(lists);
-
-                timeStamp -= 1000;
-                if(timeStamp<0){
-                    w.endTimeCallBack();
-                    clearInterval(dynamic);
-                }
+        // 处理倒数, t 剩余倒数的时间戳, fn 每次倒数要执行的方法，timer 执行该方法的定时器
+        function HandleTime(t, fn, timer){
+            "use strict";
+            if(t<0){
+                w.endTimeCallBack();
+                clearInterval(dynamic);
+                return;
             }
-
-            function writeIn(t){
-                "use strict";
-                $(w.dayID).html(t.day+w.dayTip);
-                $(w.hourID).html(t.hour+w.hourTip);
-                $(w.minuteID).html(t.minute+w.minuteTip);
-                $(w.secondID).html(t.seconds+w.secondTip);
+            let lists = {
+                day: Math.floor(t/tc.d),
+                hour: Math.floor((t%tc.d)/tc.h),
+                minute: Math.floor(((t%tc.d)%tc.h)/tc.m),
+                seconds: Math.floor((((t%tc.d)%tc.h)%tc.m)/tc.s)
+            };
+            fn(lists);
+            timeStamp -= 1000;
+            if(timeStamp<0){
+                w.endTimeCallBack();
+                clearInterval(timer);
             }
         }
+
+
+
+        function writeIn(t){
+            $(w.dayID).html(t.day+w.dayTip);
+            $(w.hourID).html(t.hour+w.hourTip);
+            $(w.minuteID).html(t.minute+w.minuteTip);
+            $(w.secondID).html(t.seconds+w.secondTip);
+        }
+
+
+        function secondsIn(t){
+            let s = t.seconds,
+                $a = $(w.address);
+            $a.html(s+w.typeSecondTip);
+            if(s==0){
+                $a.html(w.endTime +w.typeSecondTip);
+            }
+        }
+
     };
 })(window, jQuery);
